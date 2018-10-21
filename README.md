@@ -16,6 +16,6 @@ A <b>hands-free</b> mouse input and navigation interface powered by facial expre
 
 ### Software ###
 
- The source code is in C++. \
- Dlib (68 point facial landmark detection) \
- OpenCV (for overlay Text, display and testing) 
+ The source code is in C++11 \
+ [Dlib](http://dlib.net/) (68 point facial landmark detection) \
+ [OpenCV (C++)](https://opencv.org/) (for overlay Text, display and testing) 
