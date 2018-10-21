@@ -1,10 +1,9 @@
 # FaceMouse
-DEMO
+A <b>hands-free</b> mouse input and navigation interface powered by facial expressions.  
+
 [GIF](FaceMouse.gif)
 
 <img src="https://github.com/codebuddha/FaceMouse/blob/master/FaceMouse.gif">
-
-A hands-free mouse input and navigation interface powered by facial expressions.
 
 ###Options
  - to Scroll : Open mouth and move up/down   
