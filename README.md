@@ -6,10 +6,11 @@ A <b>hands-free</b> mouse input and navigation interface powered by facial expre
 <img src="https://github.com/codebuddha/FaceMouse/blob/master/FaceMouse.gif">
 
 ### Options ###
- - to Scroll : Open mouth and move up/down   
+ - to Scroll : activate SCROLL_MODE and move up/down   
  - Left-Click : activate CLICK_MODE and blink with left eye
  - Right-Click : activate CLICK_MODE and blink with right eye
  - Blink with both eyes to activate CLICK_MODE
+ - Open mouth to activate SCROLL_MODE (close to deactivate)
  - Move mouse pointer with motion of your head
  - Calibrate for personal use
 
