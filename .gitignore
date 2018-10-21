@@ -1,4 +1,4 @@
-.dat
-.out
+*.dat
+*.out
 build
 faces
