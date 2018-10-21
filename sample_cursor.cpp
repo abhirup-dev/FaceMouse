@@ -58,7 +58,7 @@ int main(int argc, char * argv[]) {
 	unsigned int mask = 0;
     Display *display = XOpenDisplay(0);
     Window root = DefaultRootWindow(display);
-    Window child_win, root_win;`1
+    Window child_win, root_win;
 	while(true)
 	{
 		XQueryPointer(display, root, &child_win, &root_win, &root_x, &root_y, &win_x, &win_y, &mask);
