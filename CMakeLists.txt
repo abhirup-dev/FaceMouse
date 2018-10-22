@@ -14,5 +14,5 @@ macro(add_code name)
    target_link_libraries(${name} X11 )
 endmacro()
 
-add_code(test1)
+add_code(face_mouse)
 add_code(landmark)

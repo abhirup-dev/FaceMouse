@@ -19,7 +19,8 @@ auto WHITE_COLOR = cv::Scalar(255, 255, 255),
 	BLUE_COLOR = cv::Scalar(255, 0, 0),
 	BLACK_COLOR = cv::Scalar(0, 0, 0),
 	BROWN_COLOR = cv::Scalar(42, 42, 165),
-	MAROON_COLOR = cv::Scalar(0, 0, 128)
+	MAROON_COLOR = cv::Scalar(0, 0, 128),
+	ORANGE_COLOR = cv::Scalar(0, 165, 255)
 	;
 std::pair<int,int>
 	MOUTH = std::make_pair(48,68),
@@ -57,7 +58,10 @@ float
 	RSQUINT_THRESH = 160,
 	LEAR_THRESH = 0,
 	REAR_THRESH = 0;
-//	values
+std::vector<cv::Point>
+	MOUTH_POINTS,
+	LEYE_POINTS,
+	REYE_POINTS;
 int POINTER_X = 1920/2, POINTER_Y = 1080/2;
 int PREV_X = 1920/2, PREV_Y = 1080/2;
 
@@ -68,7 +72,7 @@ using namespace dlib;
 using namespace std;
 
 std::pair<float, float> calcSquint(const full_object_detection &points);
-float calcEAR(const full_object_detection &points, std::pair<int,int> where);
+float calcEAR(const std::vector<cv::Point> &pts);
 
 void reset_pointer()
 {
@@ -88,8 +92,8 @@ void set_thresh(const full_object_detection &points)
 	{
 		if(DOUBLE_BLINK_COUNT==0)
 		{
-			LEAR_THRESH = calcEAR(points, LEYE);
-			REAR_THRESH = calcEAR(points, REYE);
+			LEAR_THRESH = calcEAR(LEYE_POINTS);
+			REAR_THRESH = calcEAR(REYE_POINTS);
 		}
 	}
 }
@@ -105,6 +109,12 @@ std::vector<cv::Point> extract(const full_object_detection &points, std::pair<in
 		pts.push_back(tmp);
 	}
 	return pts;
+}
+void extract_all(const full_object_detection &points)
+{
+	MOUTH_POINTS = extract(points, MOUTH);
+	LEYE_POINTS = extract(points, LEYE);
+	REYE_POINTS = extract(points, REYE);
 }
 void add_stats(cv::Mat &img)
 {
@@ -129,6 +139,41 @@ void add_stats(cv::Mat &img)
 	cv::putText(img, lrbl, cvPoint(30,180),
 				cv::FONT_HERSHEY_COMPLEX_SMALL, 0.8, RED_COLOR, 1, CV_AA);
 }
+void add_overlay(cv::Mat &img, const full_object_detection &points)
+{
+	if(SCROLL_MODE)
+	{
+		auto &pts = MOUTH_POINTS;
+		for(int i=0; i<pts.size()-1; i++)
+			cv::line(img, pts[i+1], pts[i], GREEN_COLOR, 2, CV_AA);
+	}
+
+	if(CLICK_MODE)
+	{
+		auto &pts = LEYE_POINTS;
+		for(int i=0; i<pts.size()-1; i++)
+		{
+			auto col = YELLOW_COLOR; int lw = 1;
+			if(LSQUINT_COUNT > 0)
+				{
+					col = BLUE_COLOR;
+					lw = LSQUINT_COUNT;
+				}
+			cv::line(img, pts[i+1], pts[i], col, lw, CV_AA);
+		}
+		pts = REYE_POINTS;
+		for(int i=0; i<pts.size()-1; i++)
+		{
+			auto col = YELLOW_COLOR; int lw = 1;
+			if(RSQUINT_COUNT > 0)
+				{
+					col = BLUE_COLOR;
+					lw = RSQUINT_COUNT;
+				}
+			cv::line(img, pts[i+1], pts[i], col, lw, CV_AA);
+		}
+	}
+}
 void mark_nose(const cv::Mat &img, const full_object_detection &points)
 {
 	cv::Point tmp;
@@ -139,11 +184,15 @@ void mark_nose(const cv::Mat &img, const full_object_detection &points)
 }
 void track_nose(const cv::Mat &img, const full_object_detection &points, int mult = 1)
 {
+	float xsns = 3, ysns = 3;
 	auto ptr = getCurrentPos(display, root);
 	int currx = points.part(30).x(), curry = points.part(30).y();
 	float ratiox = 1920.0/img.cols, ratioy = 1080.0/img.rows;
-	int delx = currx - ptr.first / ratiox, dely = curry - ptr.second / ratioy;
-	POINTER_X += mult*delx; POINTER_Y += mult*dely;
+	float delx = currx - ptr.first / ratiox, dely = curry - ptr.second / ratioy;
+	if(abs(delx) > xsns)
+		POINTER_X += mult*delx;
+	if(abs(dely) > ysns)
+		POINTER_Y += mult*dely;
 //	std::cout << "Current = " << currx << " " << curry << "\n";
 //	std::cout << "Pointer = " << POINTER_X << " " << POINTER_Y << "\n";
 	if(POINTER_X <= 2 || POINTER_X >= 1917)
@@ -157,13 +206,13 @@ void track_nose(const cv::Mat &img, const full_object_detection &points, int mul
 }
 void MAR(cv::Mat &img, const full_object_detection &points)
 {
-	auto mpts = extract(points, MOUTH);
+	MOUTH_POINTS = extract(points, MOUTH);;
 	float mar =
-			(cv::norm(cv::Mat(mpts[13]), cv::Mat(mpts[19])) +
-			cv::norm(cv::Mat(mpts[14]), cv::Mat(mpts[18])) +
-			cv::norm(cv::Mat(mpts[15]), cv::Mat(mpts[17]))) /
-			(2 * cv::norm(cv::Mat(mpts[12]), cv::Mat(mpts[16])));
-//	std::cout << "MAR = " << mar << "\n";
+			(cv::norm(cv::Mat(MOUTH_POINTS[13]), cv::Mat(MOUTH_POINTS[19])) +
+			cv::norm(cv::Mat(MOUTH_POINTS[14]), cv::Mat(MOUTH_POINTS[18])) +
+			cv::norm(cv::Mat(MOUTH_POINTS[15]), cv::Mat(MOUTH_POINTS[17]))) /
+			(2 * cv::norm(cv::Mat(MOUTH_POINTS[12]), cv::Mat(MOUTH_POINTS[16])));
+	// std::cout << "MAR = " << mar << "\n";
 	if(mar >= MAR_THRESH && !SCROLL_MODE)
 	{
 		SCROLL_MODE = true;
@@ -176,9 +225,8 @@ void MAR(cv::Mat &img, const full_object_detection &points)
 		std::cout << "Scrolling is OFF.\n";
 	}
 }
-float calcEAR(const full_object_detection &points, std::pair<int,int> where)
+float calcEAR(const std::vector<cv::Point> &pts)
 {
-	auto pts = extract(points, where);
 	float EAR = 100*(cv::norm(cv::Mat(pts[1]), cv::Mat(pts[5]))+
 			cv::norm(cv::Mat(pts[2]), cv::Mat(pts[4])))/
 			(2*cv::norm(cv::Mat(pts[0]), cv::Mat(pts[3])));
@@ -212,8 +260,8 @@ void blink_action(const full_object_detection &points)
 {
 	float sns = 6;
 	float LEAR, REAR;
-	LEAR = calcEAR(points, LEYE);
-	REAR = calcEAR(points, REYE);
+	LEAR = calcEAR(LEYE_POINTS);
+	REAR = calcEAR(REYE_POINTS);
 	if(REAR <= REAR_THRESH-sns && LEAR <= LEAR_THRESH-sns && !CLICK_MODE)
 	{
 		std:cout << "=====+++++Mark+++++=====\n";
@@ -248,6 +296,7 @@ void squint_action(const full_object_detection &points)
 	if(ls <= LSQUINT_THRESH-sns && !SCROLL_MODE && CLICK_MODE)
 	{
 		LSQUINT_COUNT++;
+		RSQUINT_COUNT = 0;
 		if(LSQUINT_COUNT == HIGH_FRAME_SENSITIVITY)
 		{
 			LEFT_BLINKS++;
@@ -265,6 +314,7 @@ void squint_action(const full_object_detection &points)
 		if(RSQUINT_COUNT == HIGH_FRAME_SENSITIVITY)
 		{
 			RIGHT_BLINKS++;
+			LSQUINT_COUNT = 0;
 			std::cout << "=====+++++Right-CLick+++++=====\n";
 			mouseClick(3, display);
 			RSQUINT_COUNT = 0;
@@ -281,13 +331,13 @@ void grab_scroll()
 	{
 		mouseClick(5, display);
 		DIRECTION = 2;
-		usleep(1e4);
+		// usleep(1e4);
 	}
 	else if(ptr.second < PREV_Y - 10)
 	{
 		mouseClick(4, display);
 		DIRECTION = 1;
-		usleep(1e4);
+		// usleep(1e4);
 	}
 	PREV_X = ptr.first;
 	PREV_Y = ptr.second;
@@ -306,7 +356,7 @@ int main()
         int frames=0, nframes=1000;
         time_t start, end;
         cv::namedWindow("new", 1);
-        cv::moveWindow("new", 1500, 200);
+        cv::moveWindow("new", 1500, 0);
         frontal_face_detector detector = get_frontal_face_detector();
         shape_predictor pose_model;
         deserialize("shape_predictor_68_face_landmarks.dat") >> pose_model;
@@ -323,16 +373,18 @@ int main()
             std::vector<full_object_detection> shapes;
 			shapes.push_back(pose_model(cimg, faces[0]));
 
+			extract_all(shapes.back());//needs to be first commend in sequence
 			if(frames == 0)
 				set_thresh(shapes.back());
 			blink_action(shapes.back());
 			squint_action(shapes.back());
 			add_stats(out);
-			track_nose(out, shapes.back(), 2);
+			track_nose(out, shapes.back(), 3);
 			set_thresh(shapes.back());
             MAR(out, shapes.back());
 			if(SCROLL_MODE)
 				grab_scroll();
+			add_overlay(out, shapes.back());// needs to be last command in the sequence
             cv::imshow("new", out);
             frames++;MAR(out, shapes.back());
 			if(SCROLL_MODE)
@@ -356,4 +408,3 @@ int main()
         cout << e.what() << endl;
     }
 }
-

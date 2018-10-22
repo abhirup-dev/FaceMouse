@@ -1,0 +1,19 @@
+{
+    "configurations": [
+        {
+            "name": "Linux",
+            "includePath": [
+                "${workspaceFolder}/**",
+                "/usr/local/include/opencv",
+                "/usr/local/include",
+                "/opt/dlib-19.16"
+            ],
+            "defines": [],
+            "compilerPath": "/usr/bin/clang++-6.0",
+            "cStandard": "c11",
+            "cppStandard": "c++17",
+            "intelliSenseMode": "clang-x64"
+        }
+    ],
+    "version": 4
+}
