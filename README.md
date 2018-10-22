@@ -20,7 +20,7 @@ NB: The frames are horizontally flipped.
  The source code is in C++11 \
  [Dlib](http://dlib.net/) for 68-point facial landmark detection. \
  [libX11](https://en.wikipedia.org/wiki/Xlib) and [XTEST](https://www.x.org/releases/X11R7.7/doc/libXtst/xtestlib.html) for controlling mouse-pointer. \
- [OpenCV (C++)](https://opencv.org/) for overlay Text, display and testing. 
+ [OpenCV (C++)](https://opencv.org/) for overlay Text, markers, display and testing. 
 
  ### Tips ###
  - Using <b>X11</b>: open [sample_cursor.cpp](sample_cursor.cpp) and compile using `g++ sample_cursor.cpp -lX11`. Enter numbers between 1 to 5 to emulate different mouse keypresses.
