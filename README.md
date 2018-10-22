@@ -1,5 +1,5 @@
 # FaceMouse
-A <b>hands-free</b> mouse input and navigation interface powered by facial expressions.  
+A **hands-free** mouse input and navigation interface powered by facial expressions.  
 
 [GIF](FaceMouse.gif)
 
@@ -8,9 +8,9 @@ A <b>hands-free</b> mouse input and navigation interface powered by facial expre
 NB: The frames are horizontally flipped. 
 
 ### Options ###
- - to <b>scroll</b> activate SCROLL_MODE and move up/down   
- - <b>left-Click</b> activate CLICK_MODE and blink with left eye
- - <b>right-Click</b> activate CLICK_MODE and blink with right eye
+ - to **scroll** activate SCROLL_MODE and move up/down   
+ - **left-Click** activate CLICK_MODE and blink with left eye
+ - **right-Click** activate CLICK_MODE and blink with right eye
  - Blink with both eyes to activate CLICK_MODE
  - Open mouth to activate SCROLL_MODE (close to deactivate)
  - Move mouse pointer with motion of your head
@@ -23,14 +23,14 @@ NB: The frames are horizontally flipped.
  - [OpenCV (C++)](https://opencv.org/) for overlay Text, markers, display and testing. 
 
  ### Tips ###
- - Using <b>X11</b>: open [sample_cursor.cpp](sample_cursor.cpp) and compile using `g++ sample_cursor.cpp -lX11`. Enter numbers between 1 to 5 to emulate different mouse keypresses.
+ - Using **X11**: open [sample_cursor.cpp](sample_cursor.cpp) and compile using `g++ sample_cursor.cpp -lX11`. Enter numbers between 1 to 5 to emulate different mouse keypresses.
  - If you mistakenly activate CLICK_MODE (stray blinks ¯\\\_(ツ)\_/¯), activate SCROLL_MODE momentarily to deactivate the former.
- - Set <b>frame sensitivies</b> for all actions. These the denote the number of frames the expression needs to be sustained for activation. This protects against stray blinks. Adjust it!
+ - Set **frame sensitivies** for all actions. These the denote the number of frames the expression needs to be sustained for activation. This protects against stray blinks. Adjust it!
    ```
     LOW_FRAME_SENSITIVITY = 3,
 	HIGH_FRAME_SENSITIVITY = 5, ...
     ```
- - Set <b>thresholds</b> for actions. Most are <b>auto-calibrated</b> (see [`set_thresh()`](https://github.com/codebuddha/FaceMouse/blob/03679663bf17767585cb778b114dbef515b64199/face_mouse.cpp#L81) function), i.e. updated frame-by-frame. Works well if you are moving around a lot.
+ - Set **thresholds** for actions. Most are **auto-calibrated** (see [`set_thresh()`](https://github.com/codebuddha/FaceMouse/blob/03679663bf17767585cb778b114dbef515b64199/face_mouse.cpp#L81) function), i.e. updated frame-by-frame. Works well if you are moving around a lot.
     ```
 	MAR_THRESH = 0.3, LSQUINT_THRESH, RSQUINT_THRESH, LEAR_THRESH, REAR_THRESH;
     ```
