@@ -30,7 +30,7 @@ NB: The frames are horizontally flipped.
     LOW_FRAME_SENSITIVITY = 3,
 	HIGH_FRAME_SENSITIVITY = 5, ...
     ```
- - Set <b>thresholds</b> for actions. Most are <b>auto-calibrated</b> (see [`set_thresh()`] (https://github.com/codebuddha/FaceMouse/blob/03679663bf17767585cb778b114dbef515b64199/face_mouse.cpp#L81) function), i.e. updated frame-by-frame. Works well if you are moving around a lot.
+ - Set <b>thresholds</b> for actions. Most are <b>auto-calibrated</b> (see [`set_thresh()`](https://github.com/codebuddha/FaceMouse/blob/03679663bf17767585cb778b114dbef515b64199/face_mouse.cpp#L81) function), i.e. updated frame-by-frame. Works well if you are moving around a lot.
     ```
 	MAR_THRESH = 0.3, LSQUINT_THRESH, RSQUINT_THRESH, LEAR_THRESH, REAR_THRESH;
     ```
