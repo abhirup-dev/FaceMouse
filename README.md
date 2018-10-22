@@ -8,9 +8,9 @@ A <b>hands-free</b> mouse input and navigation interface powered by facial expre
 NB: The frames are horizontally flipped. 
 
 ### Options ###
- - to <u>Scroll</u> activate SCROLL_MODE and move up/down   
- - <u>Left-Click</u> activate CLICK_MODE and blink with left eye
- - <u>Right-Click</u> activate CLICK_MODE and blink with right eye
+ - to <b>scroll</b> activate SCROLL_MODE and move up/down   
+ - <b>left-Click</b> activate CLICK_MODE and blink with left eye
+ - <b>right-Click</b> activate CLICK_MODE and blink with right eye
  - Blink with both eyes to activate CLICK_MODE
  - Open mouth to activate SCROLL_MODE (close to deactivate)
  - Move mouse pointer with motion of your head
